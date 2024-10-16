@@ -1,6 +1,8 @@
 function Signin() {
   return (
-    <div>This is signin page</div>
+    <>
+    <div className="text-yellow-500 ">This is signin page</div>
+    </>
   )
 }
 
