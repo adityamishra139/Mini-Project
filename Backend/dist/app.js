@@ -20,6 +20,7 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const dotenv_1 = __importDefault(require("dotenv"));
+const Auth_1 = __importDefault(require("./Middlewares/Auth"));
 const userRoute = (0, express_1.default)();
 const prisma = new client_1.PrismaClient();
 const userSchema = zod_1.default.object({
@@ -36,7 +37,7 @@ userRoute.use((0, cors_1.default)({
     origin: "http://localhost:5173"
 }));
 userRoute.use(express_1.default.urlencoded({ extended: true }));
-userRoute.get('/', (req, res) => {
+userRoute.get('/', Auth_1.default, (req, res) => {
     res.send("Hello world");
 });
 userRoute.post('/api/signin', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -76,6 +77,7 @@ userRoute.post('/api/signin', (req, res) => __awaiter(void 0, void 0, void 0, fu
             }
         }
         catch (error) {
+            console.log(error);
             res.status(500).send("Error signing in");
         }
     }

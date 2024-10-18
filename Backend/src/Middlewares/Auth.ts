@@ -7,7 +7,7 @@ const jwt_secret_key = process.env.JWT_SECRET_KEY;
 function AuthTokenCheck (req:Request , res:Response,next:NextFunction){
     const token = req.cookies.token;
     if(!token){
-        res.status(401).send("No token");
+        res.status(401).send("No token provided");
     }
     else{
         try{

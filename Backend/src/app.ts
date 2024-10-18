@@ -28,7 +28,7 @@ userRoute.use(cors({
 userRoute.use(express.urlencoded({ extended: true }));
 
 
-userRoute.get('/' , (req,res)=>{
+userRoute.get('/' ,AuthTokenCheck, (req,res)=>{
     res.send("Hello world");
 })
 
@@ -69,8 +69,9 @@ userRoute.post('/api/signin', async (req: Request, res: Response) => {
       // Set token as a cookie
       res.cookie("token", token, { maxAge: 60 * 60 * 1000,httpOnly:true });
   
-      res.send("logged in");}
+      res.status(200).send("logged in");}
     } }catch (error) {
+      console.log(error)
       res.status(500).send("Error signing in");
     }
   }});
