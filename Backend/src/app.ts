@@ -118,6 +118,26 @@ userRoute.post('/api/signup' , async(req : Request , res :Response)=>{
     }
 }})
 
+userRoute.post('/api/logout' , (req:Request , res:Response)=>{
+  res.clearCookie('token');
+  res.status(200).send("Logged out");
+})
+
+userRoute.get('/api/verifyToken',(req:Request , res:Response)=>{
+  const token = req.cookies.token;
+  if(!token){
+    res.status(401).send("No token provided");
+  }
+  else{
+    try{
+      const decode = jwt.verify(token,jwt_secret_key as string)
+      res.status(200).send("Authenticated");
+    }
+    catch(e){
+      res.status(403).send("Invalid Token")
+    }
+  }
+})
 // userRoute.use(AuthTokenCheck);
 userRoute.listen(3000 , ()=>{
     console.log("app listening to port ",3000);

@@ -72,7 +72,7 @@ userRoute.post('/api/signin', (req, res) => __awaiter(void 0, void 0, void 0, fu
                     }, jwt_secret_key, { expiresIn: '1h' });
                     // Set token as a cookie
                     res.cookie("token", token, { maxAge: 60 * 60 * 1000, httpOnly: true });
-                    res.send("logged in");
+                    res.status(200).send("logged in");
                 }
             }
         }
@@ -120,6 +120,25 @@ userRoute.post('/api/signup', (req, res) => __awaiter(void 0, void 0, void 0, fu
         }
     }
 }));
+userRoute.post('/api/logout', (req, res) => {
+    res.clearCookie('token');
+    res.status(200).send("Logged out");
+});
+userRoute.get('/api/verifyToken', (req, res) => {
+    const token = req.cookies.token;
+    if (!token) {
+        res.status(401).send("No token provided");
+    }
+    else {
+        try {
+            const decode = jsonwebtoken_1.default.verify(token, jwt_secret_key);
+            res.status(200).send("Authenticated");
+        }
+        catch (e) {
+            res.status(403).send("Invalid Token");
+        }
+    }
+});
 // userRoute.use(AuthTokenCheck);
 userRoute.listen(3000, () => {
     console.log("app listening to port ", 3000);

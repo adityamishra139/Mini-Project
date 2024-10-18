@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useState } from 'react';
-
+import {BACKEND_URL} from '../config'
 const Signin = () => {
   const [formData, setFormData] = useState({
     email: '',
@@ -19,7 +19,7 @@ const Signin = () => {
     console.log('Sign In Data:', formData);
     // Handle sign-in logic here, e.g., send data to backend
     try{
-      const response = await axios.post('http://localhost:3000/api/signin',{
+      const response = await axios.post(`${BACKEND_URL}/signin`,{
         email : formData.email,
         password : formData.password
       })
