@@ -1,46 +1,47 @@
-import express , {Request,Response} from 'express'
-import z from 'zod'
+import express , {request, Request,Response} from 'express'
+import z, { string } from 'zod'
 import { PrismaClient} from '@prisma/client'
 import cors from 'cors'
 import jwt,{JwtPayload } from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import cookieParser from 'cookie-parser'
 import dotenv from 'dotenv'
+import AuthTokenCheck from './Middlewares/Auth'
 
-const app = express();
+const userRoute = express();
 const prisma  = new PrismaClient();
 const userSchema = z.object({
-    username : z.string(),
-    email : z.coerce.string().email(),
+    username : z.string().optional(),
+    email : z.string().email(),
     password : z.string().min(8 , "Password must be of min 8 letters")
 })
 
 dotenv.config();
 const jwt_secret_key = process.env.JWT_SECRET_KEY;
 
-app.use(express.json());
-app.use(cookieParser());
-app.use(cors({
+userRoute.use(express.json());
+userRoute.use(cookieParser());
+userRoute.use(cors({
     credentials:true,
     origin:"http://localhost:5173"
 }))
-app.use(express.urlencoded({ extended: true }));
+userRoute.use(express.urlencoded({ extended: true }));
 
 
-app.get('/' , (req,res)=>{
+userRoute.get('/' , (req,res)=>{
     res.send("Hello world");
 })
 
-app.post('/api/signin', async (req: Request, res: Response)=> {
-    const { email, password } = req.body;
+userRoute.post('/api/signin', async (req: Request, res: Response) => {
+  const { email, password } = req.body;
   
     // Validate input using Zod schema
     const inputValidation = userSchema.safeParse({ email, password });
-  
+    console.log(inputValidation)
     if (!inputValidation.success) {
-      return res.status(400).send("Invalid email or password");
+      res.status(400).send("Invalid email or password "+ inputValidation);
     }
-  
+    else{
     try {
       // Find the user by email
       const user = await prisma.user.findUnique({
@@ -50,31 +51,73 @@ app.post('/api/signin', async (req: Request, res: Response)=> {
       });
   
       if (!user) {
-        return res.status(404).send("User not found");
+         res.status(404).send("User not found");
       }
-  
+      else{
       // Validate password
       const isPasswordValid = await bcrypt.compare(password, user.password);
   
       if (!isPasswordValid) {
-        return res.status(400).send("Invalid Password");
+         res.status(400).send("Invalid Password");
       }
-  
+      else{
       // Generate JWT token
       const token = jwt.sign({
         id: user.id
       }, jwt_secret_key as string, { expiresIn: '1h' });
   
       // Set token as a cookie
-      res.cookie("token", token, { maxAge: 60 * 60 * 1000 });
+      res.cookie("token", token, { maxAge: 60 * 60 * 1000,httpOnly:true });
   
-      return res.send("logged in");
-    } catch (error) {
-      return res.status(500).send("Error signing in");
+      res.send("logged in");}
+    } }catch (error) {
+      res.status(500).send("Error signing in");
     }
-  });
+  }});
   
+userRoute.post('/api/signup' , async(req : Request , res :Response)=>{
+    const {username,email,password} = req.body;
+    const inputValidation = userSchema.safeParse({username,email,password})
+    if(!inputValidation.success){
+      res.status(400).send("Invalid username,email or password")
+    }
+    else{
+    try{
+        const user  = await prisma.user.findUnique({
+          where:{
+            email
+          }
+        })
+        if(user){
+           res.status(409).send("Already have an account")
+        }
+        else{
+          const hashPassword = await bcrypt.hash(password,10);
+          const response  = await prisma.user.create({
+            data:{
+              username,
+              email,
+              password:hashPassword
+            }
+          })
+          
+          const token = jwt.sign({id:response.id},jwt_secret_key as string , {expiresIn:'1h'})
+          res.cookie("token" , token ,{
+            maxAge:60*60*1000,
+            httpOnly:true
+          })
 
-app.listen(3000 , ()=>{
+         res.status(201).send("User created successfully");
+        }
+    }
+  
+    catch(e)
+    {
+      res.status(500).send("Error creating a new user")
+    }
+}})
+
+// userRoute.use(AuthTokenCheck);
+userRoute.listen(3000 , ()=>{
     console.log("app listening to port ",3000);
 })

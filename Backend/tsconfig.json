@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+      "lib": ["dom", "es2015", "dom.iterable"],
       "target": "es6",
       "module": "commonjs",
       "outDir": "./dist",
