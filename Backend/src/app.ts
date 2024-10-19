@@ -23,7 +23,8 @@ userRoute.use(express.json());
 userRoute.use(cookieParser());
 userRoute.use(cors({
     credentials:true,
-    origin:"http://localhost:5173"
+    origin:"http://localhost:5173",
+    methods: ['POST', 'PUT', 'GET', 'OPTIONS', 'HEAD'],
 }))
 userRoute.use(express.urlencoded({ extended: true }));
 
@@ -67,7 +68,7 @@ userRoute.post('/api/signin', async (req: Request, res: Response) => {
       }, jwt_secret_key as string, { expiresIn: '1h' });
   
       // Set token as a cookie
-      res.cookie("token", token, { maxAge: 60 * 60 * 1000,httpOnly:true });
+      res.cookie("token", token, { maxAge: 60 * 60 * 1000,httpOnly:true ,path:'/',sameSite:'lax'});
   
       res.status(200).send("logged in");}
     } }catch (error) {
@@ -105,7 +106,9 @@ userRoute.post('/api/signup' , async(req : Request , res :Response)=>{
           const token = jwt.sign({id:response.id},jwt_secret_key as string , {expiresIn:'1h'})
           res.cookie("token" , token ,{
             maxAge:60*60*1000,
-            httpOnly:true
+            httpOnly:true,
+            sameSite:'lax',
+            path:'/'
           })
 
          res.status(201).send("User created successfully");
@@ -125,6 +128,7 @@ userRoute.post('/api/logout' , (req:Request , res:Response)=>{
 
 userRoute.get('/api/verifyToken',(req:Request , res:Response)=>{
   const token = req.cookies.token;
+  console.log(token)
   if(!token){
     res.status(401).send("No token provided");
   }

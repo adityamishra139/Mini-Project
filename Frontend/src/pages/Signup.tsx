@@ -19,12 +19,13 @@ const Signup = () => {
   const handleSubmit = async(e: { preventDefault: () => void; }) => {
     e.preventDefault();
     console.log('Sign Up Data:', formData);
-    // Handle sign-up logic here, e.g., send data to backend
     try{
       const response = await axios.post(`${BACKEND_URL}/signup`,{
         username : formData.username,
         email : formData.email , 
         password : formData.password
+      },{
+        withCredentials:true
       })
 
       if(response.status === 201)

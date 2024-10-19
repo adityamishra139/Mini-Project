@@ -1,12 +1,13 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import {BACKEND_URL} from '../config'
+import { useNavigate } from 'react-router-dom';
 const Signin = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-
+  const navigate = useNavigate();
   const handleChange = (e: { target: { name: any; value: any; }; }) => {
     setFormData({
       ...formData,
@@ -22,10 +23,12 @@ const Signin = () => {
       const response = await axios.post(`${BACKEND_URL}/signin`,{
         email : formData.email,
         password : formData.password
+      },{
+          withCredentials:true
       })
       if(response.status === 200)
       {
-        window.location.href = '/';
+        navigate('/')
       }
     }
     catch(e)
