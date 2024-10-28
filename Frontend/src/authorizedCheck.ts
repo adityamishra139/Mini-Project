@@ -8,12 +8,12 @@ export const authorizeCheck = async()=>{
         })
         if(response.status === 200)
         {
-            return true;
+            return response.data.id;
         }
-        return false;
+        return -1;
     }
     catch(e)
     {
-        return false;
+        return -1;
     }
 }

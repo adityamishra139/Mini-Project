@@ -128,20 +128,48 @@ userRoute.post('/api/logout' , (req:Request , res:Response)=>{
 
 userRoute.get('/api/verifyToken',(req:Request , res:Response)=>{
   const token = req.cookies.token;
-  console.log(token)
   if(!token){
     res.status(401).send("No token provided");
   }
   else{
     try{
       const decode = jwt.verify(token,jwt_secret_key as string)
-      res.status(200).send("Authenticated");
+      console.log(decode);
+      res.status(200).json(decode);
     }
     catch(e){
       res.status(403).send("Invalid Token")
     }
   }
 })
+
+userRoute.get('/api/getUser', async (req: Request, res: Response) => {
+  const { id } = req.query; // Use req.query to get the id from query parameters
+
+  // Check if ID is provided
+  if (!id) {
+     res.status(400).json({ message: 'ID is required' });
+  }
+  else{
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: Number(id), // Convert id to number
+      },
+    });
+
+    if (!user) {
+       res.status(404).json({ message: 'User not found' });
+    }
+    else{
+    res.json(user);
+  }} catch (e) {
+    console.error("Error fetching user:", e);
+    res.status(500).json({ message: "Error fetching user" });
+  }}
+});
+
+
 // userRoute.use(AuthTokenCheck);
 userRoute.listen(3000 , ()=>{
     console.log("app listening to port ",3000);
