@@ -10,11 +10,13 @@ import {
 import { FloatingDock } from "../components/floatingNavbar";
 import Testimonials from "../components/Testimonials";
 import Hero from "../components/Hero";
-import Features from "../components/Features";
+import {FeaturesSectionDemo} from "../components/Features";
 import Footer from "../components/Footer";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
-
+import ProgressTracker from "../components/ProgressTracker";
+import ConceptExplorer from "../components/ConceptExplorer";
+import InteractiveQuizDemo from "../components/InteractiveQuizDemo";
 const links = [
   {
     title: "Home",
@@ -46,7 +48,7 @@ const links = [
 function Home() {
   const [authorized, setAuthorized] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null); // Initialize as null
+  const [user, setUser] = useState(null); 
   const [userId,setUserId] = useState(null);
 
   useEffect(() => {
@@ -103,7 +105,10 @@ function Home() {
       <div className="flex flex-col w-full items-center">
         <div>
           <Hero name={user} />
-          <Features />
+          <ProgressTracker></ProgressTracker>
+          <ConceptExplorer/>
+          <InteractiveQuizDemo/>
+          <FeaturesSectionDemo />
           <Testimonials />
           <Footer />
         </div>
