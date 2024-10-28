@@ -70,15 +70,10 @@ function Home() {
     console.log(userId)
     const getUserDetails = async () => {
       try {
-        const response = await axios.get(`${BACKEND_URL}/getUser`,{
-          data:{
-            id:userId
-          }
-        });
+        const response = await axios.get(`${BACKEND_URL}/getUser/?id=${userId}`);
         setUser(response.data);
       } catch (e) {
         console.error("Error in getting user detail:", e);
-        // You might want to set an error state or show a message to the user
       }
     };
 
