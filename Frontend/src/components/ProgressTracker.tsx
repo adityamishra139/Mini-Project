@@ -9,15 +9,17 @@ function ProgressTracker() {
 
   return (
     <section className="py-12 bg-gray-900 text-white text-center">
-      <h2 className="text-3xl md:text-4xl font-bold mb-8">Your Progress</h2>
       <div className="flex flex-col md:flex-row justify-center space-y-6 md:space-y-0 md:space-x-8 px-4">
         {subjects.map((subject, index) => (
           <div
             key={index}
-            className="flex flex-col items-center bg-gray-800 p-6 rounded-lg shadow-lg w-60 transition-transform transform hover:-translate-y-2"
+            className="flex flex-col items-center bg-gray-800 p-6 rounded-lg shadow-lg w-48 md:w-60 transition-transform transform animate-wave"
+            style={{
+              animationDelay: `${index * 0.3}s`, // Stagger animation by index
+            }}
           >
-            <h3 className="text-xl font-semibold mb-4">{subject.name}</h3>
-            <div className="relative w-24 h-24">
+            <h3 className="text-lg md:text-xl font-semibold mb-4">{subject.name}</h3>
+            <div className="relative w-20 h-20 md:w-24 md:h-24">
               <svg className="absolute inset-0 transform -rotate-90" viewBox="0 0 100 100">
                 <circle
                   cx="50"
@@ -42,13 +44,13 @@ function ProgressTracker() {
                 />
               </svg>
               <div className="absolute inset-0 flex items-center justify-center">
-                <span className="text-xl font-bold">{subject.progress}%</span>
+                <span className="text-lg md:text-xl font-bold">{subject.progress}%</span>
               </div>
             </div>
           </div>
         ))}
       </div>
-      <p className="mt-6 text-gray-400 text-center max-w-full px-4">
+      <p className="mt-6 text-gray-400 text-sm md:text-base px-4 max-w-full">
         Keep track of your progress across subjects. Aim for 100% mastery in each area to be fully prepared.
       </p>
     </section>

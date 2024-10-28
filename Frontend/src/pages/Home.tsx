@@ -14,9 +14,6 @@ import {FeaturesSectionDemo} from "../components/Features";
 import Footer from "../components/Footer";
 import axios from "axios";
 import { BACKEND_URL } from "../config";
-import ProgressTracker from "../components/ProgressTracker";
-import ConceptExplorer from "../components/ConceptExplorer";
-import InteractiveQuizDemo from "../components/InteractiveQuizDemo";
 const links = [
   {
     title: "Home",
@@ -105,10 +102,7 @@ function Home() {
       <div className="flex flex-col w-full items-center">
         <div>
           <Hero name={user} />
-          <ProgressTracker></ProgressTracker>
-          <ConceptExplorer/>
-          <InteractiveQuizDemo/>
-          <FeaturesSectionDemo />
+          <FeaturesSectionDemo/>
           <Testimonials />
           <Footer />
         </div>
