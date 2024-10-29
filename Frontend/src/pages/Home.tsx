@@ -1,29 +1,20 @@
-import { useEffect, useState } from "react";
-import { authorizeCheck } from "../authorizedCheck";
-import {
-  IconChartLine,
-  IconHome,
-  IconHelp,
-  IconUserCircle,
-  IconBook2,
-} from "@tabler/icons-react";
-import { FloatingDock } from "../components/floatingNavbar";
-import Testimonials from "../components/Testimonials";
-import Hero from "../components/Hero";
-import {FeaturesSectionDemo} from "../components/Features";
-import Footer from "../components/Footer";
-import axios from "axios";
-import { BACKEND_URL } from "../config";
+// src/pages/Home.js
+import { useEffect } from 'react';
+import { useRecoilValueLoadable } from 'recoil';
+import { checkAuthSelector, fetchUserDetailsSelector} from '../recoil/authState';
+import Hero from '../components/Hero';
+import {FeaturesSectionDemo} from '../components/Features';
+import Testimonials from '../components/Testimonials';
+import Footer from '../components/Footer';
+import {FloatingDock} from '../components/floatingNavbar';
+import { IconBook2, IconChartLine, IconHelp, IconHome, IconUserCircle } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
+
 const links = [
   {
     title: "Home",
     icon: <IconHome className="h-full w-full text-neutral-500 dark:text-neutral-300" />,
     href: "/",
-  },
-  {
-    title: "Profile",
-    icon: <IconUserCircle className="h-full w-full text-neutral-500 dark:text-neutral-300" />,
-    href: "#",
   },
   {
     title: "Quiz",
@@ -36,6 +27,11 @@ const links = [
     href: "#",
   },
   {
+    title: "Profile",
+    icon: <IconUserCircle className="h-full w-full text-neutral-500 dark:text-neutral-300" />,
+    href: "#",
+  },
+  {
     title: "Help",
     icon: <IconHelp className="h-full w-full text-neutral-500 dark:text-neutral-300" />,
     href: "#",
@@ -43,45 +39,18 @@ const links = [
 ];
 
 function Home() {
-  const [authorized, setAuthorized] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [user, setUser] = useState(null); 
-  const [userId,setUserId] = useState(null);
+  const navigate = useNavigate();
+  const authStatus = useRecoilValueLoadable(checkAuthSelector);
+  const userDetailsLoadable = useRecoilValueLoadable(fetchUserDetailsSelector);
 
+  // Redirect if unauthorized
   useEffect(() => {
-    const checkAuth = async () => {
-      const response = await authorizeCheck();
-      if (response === -1) {
-        setAuthorized(false);
-      } else {
-        setUserId(response)
-        setAuthorized(true);
-      }
-      setLoading(false);
-    };
-    checkAuth();
-  }, []);
-
-  useEffect(() => {
-    if (!loading && !authorized) {
-      window.location.href = '/signin'; 
+    if (authStatus.state === 'hasValue' && !authStatus.contents.authorized) {
+      navigate('/signin');
     }
-    console.log(userId)
-    const getUserDetails = async () => {
-      try {
-        const response = await axios.get(`${BACKEND_URL}/getUser/?id=${userId}`);
-        setUser(response.data);
-      } catch (e) {
-        console.error("Error in getting user detail:", e);
-      }
-    };
+  }, [authStatus, navigate]);
 
-    if (authorized) {
-      getUserDetails();
-    }
-  }, [authorized, loading]);
-
-  if (loading) {
+  if (authStatus.state === 'loading' || userDetailsLoadable.state === 'loading') {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">Loading...</div>
@@ -89,7 +58,7 @@ function Home() {
     );
   }
 
-  if (!user) {
+  if (authStatus.state === 'hasError' || !userDetailsLoadable.contents) {
     return (
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">Error fetching user details.</div>
@@ -97,12 +66,14 @@ function Home() {
     );
   }
 
+  const user = userDetailsLoadable.contents;
+
   return (
     <>
       <div className="flex flex-col w-full items-center">
         <div>
           <Hero name={user} />
-          <FeaturesSectionDemo/>
+          <FeaturesSectionDemo />
           <Testimonials />
           <Footer />
         </div>
