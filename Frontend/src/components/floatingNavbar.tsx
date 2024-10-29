@@ -1,9 +1,3 @@
-/**
- * Note: Use position fixed according to your needs.
- * Desktop navbar is better positioned at the bottom,
- * and Mobile navbar is better positioned at the bottom right.
- **/
-
 import { cn } from "../utils/cn"; // Ensure this function is typed correctly
 import { IconLayoutNavbarCollapse } from "@tabler/icons-react";
 import {

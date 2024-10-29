@@ -7,36 +7,8 @@ import {FeaturesSectionDemo} from '../components/Features';
 import Testimonials from '../components/Testimonials';
 import Footer from '../components/Footer';
 import {FloatingDock} from '../components/floatingNavbar';
-import { IconBook2, IconChartLine, IconHelp, IconHome, IconUserCircle } from '@tabler/icons-react';
 import { useNavigate } from 'react-router-dom';
-
-const links = [
-  {
-    title: "Home",
-    icon: <IconHome className="h-full w-full text-neutral-500 dark:text-neutral-300" />,
-    href: "/",
-  },
-  {
-    title: "Quiz",
-    icon: <IconBook2 className="h-full w-full text-neutral-500 dark:text-neutral-300" />,
-    href: "#",
-  },
-  {
-    title: "Performance",
-    icon: <IconChartLine className="h-full w-full text-neutral-500 dark:text-neutral-300" />,
-    href: "#",
-  },
-  {
-    title: "Profile",
-    icon: <IconUserCircle className="h-full w-full text-neutral-500 dark:text-neutral-300" />,
-    href: "#",
-  },
-  {
-    title: "Help",
-    icon: <IconHelp className="h-full w-full text-neutral-500 dark:text-neutral-300" />,
-    href: "#",
-  },
-];
+import { links } from '../navbarItems';
 
 function Home() {
   const navigate = useNavigate();

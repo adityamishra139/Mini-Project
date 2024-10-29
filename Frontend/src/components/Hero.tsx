@@ -10,7 +10,7 @@ interface User{
 
 function Hero({name}:{name:User}) {
   return (
-    <section className="relative flex flex-col justify-center items-center h-[100vh] px-4 text-center bg-gradient-to-br from-gray-800 via-gray-900 to-black">
+    <section className="relative flex flex-col justify-center items-center h-[90vh] px-4 text-center bg-gradient-to-br from-gray-800 via-gray-900 to-black">
       
       {/* Top Bar with Logo and Greeting */}
       <div className="absolute top-4 w-full px-6 flex justify-between items-center">
@@ -42,7 +42,7 @@ function Hero({name}:{name:User}) {
       </div>
 
       {/* Overlay for fading effect near the bottom */}
-      <div className="absolute bottom-0 w-full h-16 bg-gradient-to-t from-gray-900 opacity-90"></div>
+      <div className=" absolute bottom-0 w-full h-16 bg-gradient-to-t from-gray-900 opacity-90"></div>
     <BackgroundBeams/>
     </section>  )
 }
