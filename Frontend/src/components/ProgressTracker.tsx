@@ -20,30 +20,7 @@ function ProgressTracker() {
           >
             <h3 className="text-lg md:text-xl font-semibold mb-4">{subject.name}</h3>
             <div className="relative w-20 h-20 md:w-24 md:h-24">
-              <svg className="absolute inset-0 transform -rotate-90" viewBox="0 0 100 100">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  strokeWidth="10"
-                  className="text-gray-600 fill-none"
-                  strokeDasharray="282.6"
-                  strokeDashoffset="0"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  strokeWidth="10"
-                  className="text-purple-500 fill-none"
-                  strokeDasharray="282.6"
-                  strokeDashoffset={282.6 - (282.6 * subject.progress) / 100}
-                  style={{
-                    transition: 'stroke-dashoffset 0.6s ease-out',
-                  }}
-                />
-              </svg>
-              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center">
                 <span className="text-lg md:text-xl font-bold">{subject.progress}%</span>
               </div>
             </div>
