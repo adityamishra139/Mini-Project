@@ -27,7 +27,7 @@ function Hero({name}:{name:User}) {
       </div>
 
       {/* Heading */}
-      <h1 className="mt-12 text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-4">
+      <h1 className="mt-12 text-4xl md:text-5xl lg:text-6xl font-semibold text-white mb-4">
         Unlock Your Potential with AI-Generated Concept Quizzes
       </h1>
       
